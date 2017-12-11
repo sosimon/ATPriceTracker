@@ -5,7 +5,7 @@ aws lambda create-function \
     --profile default \
     --function-name fetchData \
     --zip-file fileb://fetchData.zip \
-    --role arn:aws:iam::490069154287:role/lambda-execution-role \
+    --role arn:aws:iam::490069154287:role/lambda-fetchData-role \
     --handler fetchData.lambda_handler \
     --runtime python3.6 \
     --timeout 10 \

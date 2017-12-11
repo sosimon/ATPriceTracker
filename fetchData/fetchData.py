@@ -1,5 +1,6 @@
 import requests
 import json
+import boto3
 
 BASEURL = "https://www.autotrader.com/rest/searchresults/base"
 SQSURL = "https://sqs.us-west-2.amazonaws.com/490069154287/autotrader-payloads"
@@ -20,6 +21,21 @@ def put_message(message):
   )
   return resp
 
+def filter(raw):
+  listings = raw["listings"]
+  output = []
+  for l in listings:
+    output.append({
+      "listingId": l.get("listingId"),
+      "firstPrice": l.get("firstPrice"),
+      "derivedPrice": l.get("derivedPrice"),
+      "salePrice": l.get("salePrice"),
+      "colorExteriorSimple": l.get("colorExteriorSimple") if "colorExteriorSimple" in l else "",
+      "maxMileage": l["maxMileage"],
+      "title": l["title"]
+    })
+  return output
+
 def lambda_handler(event, context):
   filters = {
     "makeCodeList": event.get("makeCodeList") if "makeCodeList" in event else "HONDA",
@@ -31,6 +47,6 @@ def lambda_handler(event, context):
     "numRecords": "100"
   }
   r = get(filters)
-  print(r.json())
-  r1 = put_message(json.dumps(r.json()))
+  message = filter(r.json())
+  r1 = put_message(json.dumps(message))
   return r1
