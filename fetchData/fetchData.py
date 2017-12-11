@@ -1,6 +1,8 @@
 import requests
+import json
 
 BASEURL = "https://www.autotrader.com/rest/searchresults/base"
+SQSURL = "https://sqs.us-west-2.amazonaws.com/490069154287/autotrader-payloads"
 
 def get(filters):
   headers = {
@@ -8,6 +10,14 @@ def get(filters):
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36"
   }
   resp = requests.get(BASEURL, params=filters, headers=headers)
+  return resp
+
+def put_message(message):
+  client = boto3.client('sqs')
+  resp = client.send_message(
+    QueueUrl=SQSURL,
+    MessageBody=message
+  )
   return resp
 
 def lambda_handler(event, context):
@@ -21,4 +31,6 @@ def lambda_handler(event, context):
     "numRecords": "100"
   }
   r = get(filters)
-  return r.json()
+  print(r.json())
+  r1 = put_message(json.dumps(r.json()))
+  return r1
