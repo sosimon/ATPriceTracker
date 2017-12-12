@@ -11,7 +11,7 @@ aws lambda create-function \
     --role arn:aws:iam::490069154287:role/lambda-writeRecords-role \
     --handler writeRecords.lambda_handler \
     --runtime python3.6 \
-    --timeout 60 \
+    --timeout 30 \
     --memory-size 1024 \
     --vpc-config SubnetIds="${subnet_ids}",SecurityGroupIds="${sg_id}"
 
