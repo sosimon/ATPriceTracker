@@ -27,6 +27,8 @@ def filter(raw):
   for l in listings:
     output.append({
       "listingId": l.get("listingId"),
+      "makeCode": l.get("makeCode"),
+      "modelCode": l.get("modelCode"),
       "firstPrice": l.get("firstPrice"),
       "derivedPrice": l.get("derivedPrice"),
       "salePrice": l.get("salePrice"),
