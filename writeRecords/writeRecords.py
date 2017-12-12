@@ -19,28 +19,45 @@ def get_message(client):
     return client.receive_message(QueueUrl=SQSURL)
 
 def delete_message(client, receipt_handle):
-    resp = client.delete_message(
-        QueueUrl=SQSURL,
-        ReceiptHandle=receipt_handle
-    )
-    return resp
+    return client.delete_message(QueueUrl=SQSURL, ReceiptHandle=receipt_handle)
 
 def process_records(message):
     print("Processing message: {}".format(message)) 
     conn = make_conn()
     for listing in json.loads(message):
-        listing_id = listing.get("listingId")
-        make = "Honda"
-        model = "S2000"
-        year = re.match(r".*\s(\d{4})\s.*", listing.get("title")).group(1)
-        mileage = listing.get("maxMileage").split(" ")[0].replace(",","")
-        color = listing.get("colorExteriorSimple")
-        price = listing.get("derivedPrice").replace("$","").replace(",","")
-        createdate = datetime.datetime.now()
-        query = "INSERT INTO price (listingid, make, model, year, mileage, color, price, createdate) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(listing_id, make, model, year, mileage, color, price, createdate)
+        query = "INSERT INTO price (listingid, make, model, year, mileage, color, price, createdate) \
+        VALUES ('{listing_id}','{make}','{model}','{year}','{mileage}','{color}','{price}','{createdate}')".format(prep_data(listing))
         exec_query(conn, query)
     conn.commit()
     conn.close()
+
+def prep_data(listing):
+    listing_id = listing.get("listingId")
+    make = listing.get("makeCode")
+    model = listing.get("modelCode")
+    year = re.match(r".*\s(\d{4})\s.*", listing.get("title")).group(1)
+    mileage = listing.get("maxMileage").split(" ")[0].replace(",", "")
+    color = listing.get("colorExteriorSimple") if "colorExteriorSimple" in listing else "UNKNOWN"
+    price = 0
+    if listing.get("derivedPrice"):
+        price = listing.get("derivedPrice")
+    elif listing.get("salePrice"):
+        price = listing.get("salePrice")
+    elif listing.get("firstPrice"):
+        price = listing.get("firstPrice")
+    price = price.replace("$", "").replace(",", "")
+    createdate = listing.get("retrieveDate")
+    clean_listing = {
+        "listing_id": listing_id,
+        "make": make,
+        "model": model,
+        "year": year,
+        "mileage": mileage,
+        "color": color,
+        "price": price,
+        "createdate": createdate
+    }
+    return clean_listing
 
 def make_conn():
     conn = None
@@ -56,8 +73,11 @@ def exec_query(conn, query):
     cur.execute(query)
 
 def lambda_handler(event, context):
+    # get message from queue
     r = get_message(client)
     print(r)
+
+    # check for empty message
     messages = r.get("Messages")
     message = None
     if messages:
@@ -66,7 +86,14 @@ def lambda_handler(event, context):
     else:
         print("No messages to process")
         return
+
+    # get message receipt handle
     receipt_handle = message.get("ReceiptHandle")
+
+    # process listings (write to database)
     process_records(message.get("Body"))
+
+    # delete message from queue
     r1 = delete_message(client, receipt_handle)
+    
     return r1
