@@ -25,8 +25,8 @@ def process_records(message):
     print("Processing message: {}".format(message)) 
     conn = make_conn()
     for listing in json.loads(message):
-        query = "INSERT INTO price (listingid, make, model, year, mileage, color, price, createdate) \
-        VALUES ('{listing_id}','{make}','{model}','{year}','{mileage}','{color}','{price}','{createdate}')".format(prep_data(listing))
+        l = prep_data(listing)
+        query = "INSERT INTO price (listingid, make, model, year, mileage, color, price, createdate) VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(l.get("listing_id"), l.get("make"), l.get("model"), l.get("year"), l.get("mileage"), l.get("color"), l.get("price"), l.get("createdate"))
         exec_query(conn, query)
     conn.commit()
     conn.close()
@@ -45,7 +45,7 @@ def prep_data(listing):
         price = listing.get("salePrice")
     elif listing.get("firstPrice"):
         price = listing.get("firstPrice")
-    price = price.replace("$", "").replace(",", "")
+    price = str(price).replace("$", "").replace(",", "")
     createdate = listing.get("retrieveDate")
     clean_listing = {
         "listing_id": listing_id,
