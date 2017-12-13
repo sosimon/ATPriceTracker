@@ -24,7 +24,11 @@ def put_message(message):
     return resp
 
 def filter_results(raw):
-    listings = raw["listings"]
+    listings = "" 
+    if "listings" in raw:
+        listings = raw.get("listings")
+    else:
+        return listings
     output = []
     for l in listings:
         output.append({
@@ -37,7 +41,7 @@ def filter_results(raw):
             "colorExteriorSimple": l.get("colorExteriorSimple") if "colorExteriorSimple" in l else "",
             "maxMileage": l["maxMileage"],
             "title": l["title"],
-            "retrieveDate": datetime.datetime.now()
+            "retrieveDate": datetime.datetime.now().isoformat()
         })
     return output
 
@@ -53,5 +57,8 @@ def lambda_handler(event, context):
     }
     r = get(search_params)
     message = filter_results(r.json())
-    r1 = put_message(json.dumps(message))
-    return r1
+    if message:
+        output = put_message(json.dumps(message))
+    else:
+        output = "No listings found"
+    return output
