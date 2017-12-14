@@ -8,7 +8,7 @@ aws lambda create-function \
     --profile default \
     --function-name writeRecords \
     --zip-file fileb://writeRecords.zip \
-    --role arn:aws:iam::490069154287:role/lambda-writeRecords-role \
+    --role arn:aws:iam::490069154287:role/lambdaWriteRecordsRole \
     --handler writeRecords.lambda_handler \
     --runtime python3.6 \
     --timeout 30 \

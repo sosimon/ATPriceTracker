@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM policies and roles for fetchData lambda function
+Resources:
+    Policy:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: sqs-send-message-policy
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                - Effect: Allow
+                  Action:
+                  - sqs:SendMessage
+                  Resource: arn:aws:sqs:us-west-2:490069154287:autotrader-payloads
+            Roles:
+                - !Ref Role
+    Role:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                - Effect: Allow
+                  Principal:
+                      Service:
+                      - lambda.amazonaws.com
+                  Action:
+                  - sts:AssumeRole
+            ManagedPolicyArns:
+                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            RoleName: lambdaFetchDataRole
