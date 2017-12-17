@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <title>ATPriceTracker</title>
+    <script src="/static/js/Chart.bundle.min.js"></script>
+    <script>
+    window.onload = function() {
+        var data = {{ data | tojson }};
+        var filteredData = data.map(function(row){
+            output = {
+                "x": row[5],
+                "y": row[7]
+            }
+            return output;
+        }); 
+        console.log(output);
+        var ctx = document.getElementById("chart-mileage-price").getContext("2d");
+        var myChart = new Chart.Scatter(ctx, {
+            data: {
+                datasets: [{
+                    label: "Honda S2000",
+                    data: filteredData,
+                    backgroundColor: 'rgba(54,162,235,0.1)',
+                    borderColor: 'rgba(54,162,235,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "price (USD)"
+                        }
+                    }],
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: "mileage (miles)"
+                        }
+                    }]
+                }
+            }
+        });
+    }
+    </script>
+</head>
+<body>
+    <h1>ATPriceTracker</h1>
+    <div class="chartContainer">
+        <canvas id="chart-mileage-price"></canvas>
+    </div>
+    <div class="footer">
+        <a href="https://twitter.com/sosimon">@sosimon</a>
+    </div>
+</body>
+</html>
