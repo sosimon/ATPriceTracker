@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: docker:17.05.0-ce-git
-    step:
+    steps:
       - run:
           name: Build docker image
           command: |
