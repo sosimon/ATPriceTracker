@@ -10,8 +10,12 @@ jobs:
           name: Build docker image
           command: |
             docker build -t sosimon/atpricetracker .
+            docker tag sosimon/atpricetracker $AWS_ECR_URL/atpricetracker
       - deploy:
-          name: Push docker image
+          name: Push docker image to Docker hub and AWS ECR
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push sosimon/atpricetracker
+            aws_login=$(aws ecr get-login --no-include-email --region us-west-2)
+            ${aws_login}
+            docker push $AWS_ECR_URL/atpricetracker
