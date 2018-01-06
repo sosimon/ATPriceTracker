@@ -1,13 +1,15 @@
-machine:
-  services:
-    - docker
-dependencies:
-  override:
-    - docker info
-    - docker build --rm=false -t sosimon/atpricetracker .
-deployment:
-  hub:
-    branch: master
-    commands:
-      - docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push sosimon/atpricetracker
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:17.05.0-ce-git
+    step:
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t sosimon/atpricetracker .
+      - deploy:
+          name: Push docker image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push sosimon/atpricetracker
