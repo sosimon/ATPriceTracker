@@ -9,13 +9,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --no-cache py-pip=9.0.0-r1
+            apk add --no-cache py-pip=9.0.0-r1 curl
             pip install --upgrade awscli
       - run:
           name: Install gcloud SDK and authenticate
           command: |
-            curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-183.0.0-linux-x86_64.tar.gz
-            tar -xf google-cloud-sdk-183.0.0-linux-x86_64.tar.gz
+            curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
+            tar -zxf google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
             ./google-cloud-sdk/install.sh --disable-prompts
             echo ${GOOGLE_AUTH} > gcp-key.json
             gcloud auth activate-service-account --key-file gcp-key.json
