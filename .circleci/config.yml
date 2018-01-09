@@ -18,19 +18,17 @@ jobs:
             tar -zxf google-cloud-sdk-${GOOGLE_CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
             ./google-cloud-sdk/install.sh --disable-prompts
             echo ${GOOGLE_AUTH} > gcp-key.json
-            gcloud auth activate-service-account --key-file gcp-key.json
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file gcp-key.json
+            ./google-cloud-sdk/bin/gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
           name: Build docker image
           command: |
             docker build -t sosimon/atpricetracker .
             docker tag sosimon/atpricetracker sosimon/atpricetracker:${CIRCLE_SHA1:0:8}
-            docker tag sosimon/atpricetracker $AWS_ECR_URL/atpricetracker:${CIRCLE_SHA1:0:8}
+            docker tag sosimon/atpricetracker $GOOGLE_GCR_URL/atpricetracker:${CIRCLE_SHA1:0:8}
       - deploy:
-          name: Push docker image to Docker hub and AWS ECR
+          name: Push docker image to Docker hub, GCP GCR
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push sosimon/atpricetracker:${CIRCLE_SHA1:0:8}
-            aws_login=$(aws ecr get-login --no-include-email --region us-west-2)
-            ${aws_login}
-            docker push $AWS_ECR_URL/atpricetracker:${CIRCLE_SHA1:0:8}
+            ./google-cloud-sdk/bin/gcloud docker -- push ${GOOGLE_GCR_URL}/atpricetracker:${CIRCLE_SHA1:0:8}
