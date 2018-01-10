@@ -26,11 +26,12 @@ jobs:
           command: |
             docker build -t sosimon/atpricetracker .
       - run:
-          name: Tag and push docker image to Docker hub, GCP GCR
+          name: Tag and push docker image to GCP GCR
           command: |
             IMAGE_TAG=$(cat VERSION.txt)
-            docker tag sosimon/atpricetracker sosimon/atpricetracker:${IMAGE_TAG}
             docker tag sosimon/atpricetracker $GOOGLE_GCR_URL/atpricetracker:${IMAGE_TAG}
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push sosimon/atpricetracker:${IMAGE_TAG}
             ./google-cloud-sdk/bin/gcloud docker -- push ${GOOGLE_GCR_URL}/atpricetracker:${IMAGE_TAG}
+      - deploy:
+          name: Deploy to GCP
+          command: |
+            kubectl get pods
