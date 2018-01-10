@@ -31,7 +31,7 @@ def close_db(exception):
         g.pg_db.close()
 
 @app.route("/")
-def main():
+def index():
     conn = get_db_conn()
     cur = conn.cursor()
     cur.execute("SELECT DISTINCT listingId, mileage, price FROM price WHERE price != 0;")
@@ -39,6 +39,10 @@ def main():
     print("INFO: {} rows fetched".format(cur.rowcount))
     cur.close()
     return render_template("index.html", data=data)
+
+@app.route("/healthz")
+def healthz():
+    return render_template("healthz.html")
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", debug=True, port=80)
