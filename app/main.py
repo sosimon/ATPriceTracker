@@ -42,7 +42,8 @@ def index():
 
 @app.route("/healthz")
 def healthz():
-    return render_template("healthz.html")
+    instance = {}
+    return render_template("healthz.html", instance=instance)
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", debug=True, port=80)

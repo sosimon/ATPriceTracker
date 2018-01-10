@@ -21,58 +21,35 @@
               <tbody>
                 <tr>
                   <td>Name</td>
-                  <td>{{.Name}}</td>
+                  <td>{{instance.name}}</td>
                 </tr>
                 <tr>
                   <td>Version</td>
-                  <td>{{.Version}}</td>
+                  <td>{{instance.version}}</td>
                 </tr>
                 <tr>
                   <td>ID</td>
-                  <td>{{.Id}}</td>
+                  <td>{{instance.id}}</td>
                 </tr>
                 <tr>
                   <td>Hostname</td>
-                  <td>{{.Hostname}}</td>
+                  <td>{{instance.hostname}}</td>
                 </tr>
                 <tr>
                   <td>Zone</td>
-                  <td>{{.Zone}}</td>
+                  <td>{{instance.zone}}</td>
                 </tr>
                 <tr>
                   <td>Project</td>
-                  <td>{{.Project}}</td>
+                  <td>{{instance.project}}</td>
                 </tr>
                 <tr>
                   <td>Internal IP</td>
-                  <td>{{.InternalIP}}</td>
+                  <td>{{instance.internalip}}</td>
                 </tr>
                 <tr>
                   <td>External IP</td>
-                  <td>{{.ExternalIP}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="card blue">
-          <div class="card-content white-text">
-            <div class="card-title">Proxy that handled this request</div>
-          </div>
-          <div class="card-content white">
-            <table class="bordered">
-              <tbody>
-                <tr>
-                  <td>Address</td>
-                  <td>{{.ClientIP}}</td>
-                </tr>
-                <tr>
-                  <td>Request</td>
-                  <td>{{.LBRequest}}</td>
-                </tr>
-                <tr>
-                  <td>Error</td>
-                  <td>{{.Error}}</td>
+                  <td>{{instance.externalip}}</td>
                 </tr>
               </tbody>
             </table>
