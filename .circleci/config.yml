@@ -25,11 +25,12 @@ jobs:
           name: Build docker image
           command: |
             docker build -t sosimon/atpricetracker .
-            docker tag sosimon/atpricetracker sosimon/atpricetracker:${CIRCLE_SHA1:0:8}
-            docker tag sosimon/atpricetracker $GOOGLE_GCR_URL/atpricetracker:${CIRCLE_SHA1:0:8}
-      - deploy:
-          name: Push docker image to Docker hub, GCP GCR
+      - run:
+          name: Tag and push docker image to Docker hub, GCP GCR
           command: |
+            IMAGE_TAG=$(cat VERSION.txt)
+            docker tag sosimon/atpricetracker sosimon/atpricetracker:${IMAGE_TAG}
+            docker tag sosimon/atpricetracker $GOOGLE_GCR_URL/atpricetracker:${IMAGE_TAG}
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push sosimon/atpricetracker:${CIRCLE_SHA1:0:8}
-            ./google-cloud-sdk/bin/gcloud docker -- push ${GOOGLE_GCR_URL}/atpricetracker:${CIRCLE_SHA1:0:8}
+            docker push sosimon/atpricetracker:${IMAGE_TAG}
+            ./google-cloud-sdk/bin/gcloud docker -- push ${GOOGLE_GCR_URL}/atpricetracker:${IMAGE_TAG}
