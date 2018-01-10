@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: atpricetracker-ingress
+spec:
+  tls:
+  - secretName: tls-secret
+  rules:
+  - host: www.simonso.us 
+    http:
+      paths:
+      - backend:
+          serviceName: atpricetracker-service
+          servicePort: 80
