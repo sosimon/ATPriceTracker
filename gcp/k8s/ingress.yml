@@ -6,6 +6,9 @@ metadata:
     kubernetes.io/tls-acme: "true"
     kubernetes.io/ingress.class: "gce"
 spec:
+  backend:
+    serviceName: atpricetracker-service
+    servicePort: 80
   tls:
   - secretName: tls-secret
     hosts:
@@ -14,6 +17,7 @@ spec:
   - host: www.simonso.us 
     http:
       paths:
-      - backend:
+      - path: /*
+        backend:
           serviceName: atpricetracker-service
           servicePort: 80
