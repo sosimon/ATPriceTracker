@@ -11,8 +11,8 @@
         var data = {{ data | tojson }};
         var filteredData = data.map(function(row){
             output = {
-                "x": row[5],
-                "y": row[7]
+                "x": row[1],
+                "y": row[2]
             }
             return output;
         }); 

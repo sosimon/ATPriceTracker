@@ -34,7 +34,7 @@ def close_db(exception):
 def main():
     conn = get_db_conn()
     cur = conn.cursor()
-    cur.execute("SELECT * from price;")
+    cur.execute("SELECT DISTINCT listingId, mileage, price FROM price WHERE price != 0;")
     data = cur.fetchall()
     print("INFO: {} rows fetched".format(cur.rowcount))
     cur.close()
