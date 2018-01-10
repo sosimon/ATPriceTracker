@@ -2,9 +2,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: atpricetracker-ingress
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "gce"
 spec:
   tls:
   - secretName: tls-secret
+    hosts:
+    - www.simonso.us
   rules:
   - host: www.simonso.us 
     http:
