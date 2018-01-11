@@ -54,7 +54,10 @@ jobs:
       - run:
           name: Deploy 
           command: |
-            kubectl get pods
+            IMAGE_NAME=gcr.io/atpricetracker/atpricetracker
+            IMAGE_TAG=$(cat VERSION.txt)
+            sed -i.bak "s#$IMAGE_NAME:latest#$IMAGE_NAME:$IMAGE_TAG#" gcp/k8s/deployment.yml
+            kubectl apply -f gcp/k8s/deployment.yml
 workflows:
   version: 2
   build_and_deploy:
