@@ -2,6 +2,7 @@
 
 from flask import Flask, g, render_template
 import psycopg2
+import requests
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -25,6 +26,17 @@ def get_db_conn():
         g.pg_db = connect_db()
     return g.pg_db
 
+def get_metadata(path):
+    META_URL = "http://metadata.google.internal/computeMetadata/v1/"
+    headers = {"Metadata-Flavor": "Google"}
+    url = META_URL + path
+    r = ""
+    try:
+      r = requests.get(url, headers=headers)
+    except requests.exceptions.RequestException as e:
+      print e
+    return r
+
 @app.teardown_appcontext
 def close_db(exception):
     if hasattr(g, 'pg_db'):
@@ -43,6 +55,13 @@ def index():
 @app.route("/healthz")
 def healthz():
     instance = {}
+    instance["name"] = get_metadata("instance/name")
+    instance["hostname"] = get_metadata("instance/hostname")
+    instance["id"] = get_metadata("instance/id")
+    instance["zone"] = get_metadata("instance/zone")
+    instance["internalip"] = get_metadata("instance/network-interfaces/0/ip")
+    instance["externalip"] = get_metadata("instance/network-interfaces/0/forwarded-ips")
+    instance["project"] = get_metadata("project/project-id")
     return render_template("healthz.html", instance=instance)
 
 if __name__=="__main__":
