@@ -22,4 +22,4 @@ spec:
         readinessProbe:
           httpGet:
             path: /healthz
-            ports: 80
+            port: 80
