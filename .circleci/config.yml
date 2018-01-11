@@ -33,20 +33,23 @@ jobs:
             ./google-cloud-sdk/bin/gcloud docker -- push ${GOOGLE_GCR_URL}/atpricetracker:${IMAGE_TAG}
   deploy:
     docker:
-      - image: google/cloud-sdk:latest
+      - image: google/cloud-sdk:alpine
     steps:
       - checkout
       - run:
-          name: Authenticate
+          name: Install components and authenticate
           command: |
+            gcloud --quiet components install kubectl beta
             echo ${GOOGLE_AUTH} > gcp-key.json
             gcloud auth activate-service-account --key-file gcp-key.json
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+            gcloud --quiet config set container/use_v1_api_client false
+            gcloud beta container clusters get-credentials ${GOOGLE_CLUSTER_NAME} --region ${GOOGLE_REGION}
+            kubectl version
       - run:
           name: Deploy 
           command: |
-            kubectl version
+            kubectl get pods
 workflows:
   version: 2
   build_and_deploy:
