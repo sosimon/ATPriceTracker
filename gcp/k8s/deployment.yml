@@ -19,3 +19,7 @@ spec:
         image: gcr.io/atpricetracker/atpricetracker:latest
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            ports: 80
