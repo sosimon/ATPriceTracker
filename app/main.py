@@ -35,7 +35,10 @@ def get_metadata(path):
         r = requests.get(url, headers=headers)
     except requests.exceptions.RequestException as e:
         print(e)
-    return r
+    if r:
+        return r.text
+    else:
+        return ""
 
 @app.teardown_appcontext
 def close_db(exception):
