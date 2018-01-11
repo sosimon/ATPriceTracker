@@ -17,3 +17,17 @@ kubectl create -f gcp/lego/00-namespace.yml
 kubectl create -f gcp/lego/configmap.yml
 kubectl create -f gcp/lgeo/deployment.yml
 ```
+
+## Deploy app
+
+```
+kubectl apply -f gcp/k8s/deployment.yml
+kubectl apply -f gcp/k8s/service.yml
+kubectl apply -f gcp/k8s/ingress.yml
+```
+
+Notes:
+* Remember to configure DNS to map domain name to load balancer IP
+* May need to apply gcp/k8s/ingress.yml again to trigger kube-lego?
+
+
