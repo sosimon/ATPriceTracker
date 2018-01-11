@@ -7,7 +7,10 @@ gcloud beta container clusters create atpricetracker \
   --region us-central1 \
   --node-locations us-central1-a,us-central1-c,us-central1-f \
   --num-nodes 1 \
-  --machine-type f1-micro
+  --machine-type f1-micro \
+  --enable-autoscaling \
+  --max-nodes 12 \
+  --min-nodes 3
 ```
 
 ## Deploy kube-lego
