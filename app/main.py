@@ -32,9 +32,9 @@ def get_metadata(path):
     url = META_URL + path
     r = ""
     try:
-      r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers)
     except requests.exceptions.RequestException as e:
-      print e
+        print(e)
     return r
 
 @app.teardown_appcontext
