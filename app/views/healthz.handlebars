@@ -11,35 +11,67 @@
               <tbody>
                 <tr>
                   <td>Name</td>
+                  {{#if instance.name}} 
                   <td>{{instance.name}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>Version</td>
+                  {{#if instance.version}}
                   <td>{{instance.version}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>ID</td>
+                  {{#if instance.id}}
                   <td>{{instance.id}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>Hostname</td>
+                  {{#if instance.hostname}}
                   <td>{{instance.hostname}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>Zone</td>
+                  {{#if instance.zone}}
                   <td>{{instance.zone}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>Project</td>
+                  {{#if instance.project}}
                   <td>{{instance.project}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>Internal IP</td>
+                  {{#if instance.internalip}}
                   <td>{{instance.internalip}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
                 <tr>
                   <td>External IP</td>
+                  {{#if instance.externalip}}
                   <td>{{instance.externalip}}</td>
+                  {{else}}
+                  <td>UNKNOWN</td>
+                  {{/if}}
                 </tr>
               </tbody>
             </table>
