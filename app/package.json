@@ -1,0 +1,13 @@
+{
+  "name": "atpricetracker",
+  "version": "1.0.0",
+  "description": "display used car pricing statistics",
+  "main": "app.js",
+  "repository": "https://github.com/sosimon/ATPriceTracker",
+  "author": "Simon So",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0"
+  }
+}
